@@ -29,7 +29,6 @@ func ShowOrders(conn store.DbConn) echo.HandlerFunc {
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
-
 		//return ui
 		return ctx.JSON(http.StatusOK, response)
 	}

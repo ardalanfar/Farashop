@@ -8,7 +8,6 @@ import (
 	"Farashop/internal/dto"
 	"Farashop/internal/service/public_service"
 	"Farashop/pkg/auth"
-	"Farashop/pkg/customerror"
 	"encoding/json"
 	"net/http"
 
@@ -61,7 +60,6 @@ func Register(conn store.DbConn, validator contract.ValidateRegister) echo.Handl
 				return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 			}
 		}
-
 		//return ui
 		return ctx.JSON(http.StatusOK, nil)
 	}
@@ -95,12 +93,11 @@ func Login(conn store.DbConn, validator contract.ValidateLogin) echo.HandlerFunc
 
 		//call pkg auth(create token and cookie)
 		if response.Result == true {
-			err := auth.GenerateTokensAndSetCookies(response.User, ctx)
+			err = auth.GenerateTokensAndSetCookies(response.User, ctx)
 			if err != nil {
-				return echo.NewHTTPError(http.StatusInternalServerError, customerror.Unsuccessful())
+				return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 			}
 		}
-
 		//return ui
 		return echo.NewHTTPError(http.StatusOK, "Wellcom "+response.User.Username)
 	}
@@ -129,9 +126,8 @@ func MemberValidation(conn store.DbConn, validator contract.ValidateMemberValida
 		//service
 		response, err = public_service.NewPublic(conn).MemberValidation(ctx.Request().Context(), request)
 		if err != nil || !response.Result == true {
-			return echo.NewHTTPError(http.StatusInternalServerError, customerror.InfoIncorrect())
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
-
 		//return ui
 		return ctx.JSON(http.StatusOK, nil)
 	}

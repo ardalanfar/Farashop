@@ -29,7 +29,7 @@ func ValidateLogin(conn store.DbConn) contract.ValidateLogin {
 	}
 }
 
-func ValidateMemberValidation(conn store.DbConn) contract.ValidateMemberValidation {
+func ValidateMemberValidation() contract.ValidateMemberValidation {
 	return func(ctx context.Context, req dto.MemberValidationRequest) error {
 		return validation.ValidateStruct(&req,
 			validation.Field(&req.Username, validation.Required),

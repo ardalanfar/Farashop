@@ -34,7 +34,7 @@ func main() {
 	//Public
 	ech.POST("/register", public_http.Register(conn, validator.ValidateRegister()))
 	ech.POST("/login", public_http.Login(conn, validator.ValidateLogin(conn)))
-	ech.PATCH("/validation", public_http.MemberValidation(conn, validator.ValidateMemberValidation(conn)))
+	ech.PATCH("/validation", public_http.MemberValidation(conn, validator.ValidateMemberValidation()))
 
 	/*--------------------------------------------------------------*/
 	//Admin Group

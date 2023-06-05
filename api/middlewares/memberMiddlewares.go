@@ -26,29 +26,29 @@ func SetMemberGroup(grp *echo.Group) {
 }
 
 func CheckAccessMember(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		if c.Get("user") == nil {
-			return next(c)
+	return func(ctx echo.Context) error {
+		if ctx.Get("user") == nil {
+			return next(ctx)
 		}
-		u := c.Get("user").(*jwt.Token)
+		u := ctx.Get("user").(*jwt.Token)
 		claims := u.Claims.(*auth.Claims)
 		if int(claims.Access) == 2 {
-			return next(c)
+			return next(ctx)
 		}
-		return c.JSON(http.StatusBadRequest, customerror.NOAccess())
+		return ctx.JSON(http.StatusBadRequest, customerror.NOAccess())
 	}
 }
 
 func TokenRefresherMiddlewareMember(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		if c.Get("user") == nil {
-			return next(c)
+	return func(ctx echo.Context) error {
+		if ctx.Get("user") == nil {
+			return next(ctx)
 		}
-		u := c.Get("user").(*jwt.Token)
+		u := ctx.Get("user").(*jwt.Token)
 		claims := u.Claims.(*auth.Claims)
 
 		if time.Unix(claims.ExpiresAt, 0).Sub(time.Now()) < (10 * time.Minute) {
-			rc, err := c.Cookie(auth.GetrefReshTokenCookieName())
+			rc, err := ctx.Cookie(auth.GetrefReshTokenCookieName())
 
 			if err == nil && rc != nil {
 
@@ -58,7 +58,7 @@ func TokenRefresherMiddlewareMember(next echo.HandlerFunc) echo.HandlerFunc {
 
 				if err != nil {
 					if err == jwt.ErrSignatureInvalid {
-						c.Response().Writer.WriteHeader(http.StatusUnauthorized)
+						ctx.Response().Writer.WriteHeader(http.StatusUnauthorized)
 					}
 				}
 
@@ -67,10 +67,10 @@ func TokenRefresherMiddlewareMember(next echo.HandlerFunc) echo.HandlerFunc {
 						Username: claims.Name,
 						ID:       claims.ID,
 						Access:   claims.Access,
-					}, c)
+					}, ctx)
 				}
 			}
 		}
-		return next(c)
+		return next(ctx)
 	}
 }

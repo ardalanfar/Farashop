@@ -45,7 +45,6 @@ func (i Interactor) Register(ctx context.Context, req dto.RegisterUserRequest) (
 	if err != nil || create == false {
 		return dto.RegisterUserResponse{Result: false}, err
 	}
-
 	//return
 	return dto.RegisterUserResponse{Result: true}, nil
 }
@@ -70,7 +69,6 @@ func (i Interactor) Login(ctx context.Context, req dto.LoginUserRequest) (dto.Lo
 	if checkpass != nil {
 		return dto.LoginUserResponse{Result: false, User: info}, checkpass
 	}
-
 	//return
 	return dto.LoginUserResponse{Result: true, User: info}, nil
 }
@@ -89,7 +87,6 @@ func (i Interactor) MemberValidation(ctx context.Context, req dto.MemberValidati
 	if err != nil || update == false {
 		return dto.MemberValidationResponse{Result: false}, err
 	}
-
 	//return true
 	return dto.MemberValidationResponse{Result: true}, nil
 }

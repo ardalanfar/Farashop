@@ -5,7 +5,6 @@ import (
 	"Farashop/internal/contract"
 	"Farashop/internal/dto"
 	"Farashop/internal/service/admin_service"
-	"Farashop/pkg/customerror"
 	"net/http"
 	"strconv"
 
@@ -23,7 +22,7 @@ func ShowMembers(conn store.DbConn) echo.HandlerFunc {
 		//send service
 		response, err = admin_service.NewAdmin(conn).ShowMembers(ctx.Request().Context(), request)
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, customerror.Unsuccessful())
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 		//return ui
 		return ctx.JSON(http.StatusOK, response)
@@ -54,9 +53,8 @@ func DeleteMember(conn store.DbConn, validator contract.ValidateDeleteMember) ec
 		//service
 		response, err = admin_service.NewAdmin(conn).DeleteMember(ctx.Request().Context(), request)
 		if err != nil && !response.Result {
-			return echo.NewHTTPError(http.StatusInternalServerError, customerror.InfoIncorrect())
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
-
 		//return ui
 		return ctx.JSON(http.StatusOK, nil)
 	}
@@ -88,7 +86,6 @@ func ShowInfoMember(conn store.DbConn, validator contract.ValidateShowInfoMember
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
-
 		//return ui
 		return ctx.JSON(http.StatusOK, response)
 	}

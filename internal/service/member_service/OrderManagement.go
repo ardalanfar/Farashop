@@ -23,7 +23,6 @@ func (i Interactor) ShowOrders(ctx context.Context, req dto.ShowOrdersRequest) (
 	if err != nil {
 		return dto.ShowOrdersResponse{}, err
 	}
-
 	//return
 	return dto.ShowOrdersResponse{Orders: info}, nil
 }
